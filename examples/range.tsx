@@ -1,5 +1,6 @@
 import React from 'react';
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import RangePicker from '../src/RangePicker';
 import momentGenerateConfig from '../src/generate/moment';
 import zhCN from '../src/locale/zh_CN';
@@ -57,7 +58,7 @@ export default () => {
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
           />
-          <RangePicker<Moment>
+          {/* <RangePicker<Moment>
             {...sharedProps}
             locale={zhCN}
             allowClear
@@ -80,10 +81,10 @@ export default () => {
             ranges={{
               test: [moment(), moment().add(1, 'hour')],
             }}
-          />
+          /> */}
         </div>
 
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Focus</h3>
           <RangePicker<Moment>
             {...sharedProps}
@@ -161,7 +162,7 @@ export default () => {
             locale={zhCN}
             placeholder={['start...', 'end...']}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
