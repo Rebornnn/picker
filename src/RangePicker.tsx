@@ -1026,18 +1026,18 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     size: getInputSize(picker, formatList[0], generateConfig),
   };
 
-  let activeBarLeft: number = 0;
-  let activeBarWidth: number = 0;
-  if (startInputDivRef.current && endInputDivRef.current && separatorRef.current) {
-    if (mergedActivePickerIndex === 0) {
-      activeBarWidth = startInputDivRef.current.offsetWidth;
-    } else {
-      activeBarLeft = arrowLeft;
-      activeBarWidth = endInputDivRef.current.offsetWidth;
-    }
-  }
-  const activeBarPositionStyle =
-    direction === 'rtl' ? { right: activeBarLeft } : { left: activeBarLeft };
+  // let activeBarLeft: number = 0;
+  // let activeBarWidth: number = 0;
+  // if (startInputDivRef.current && endInputDivRef.current && separatorRef.current) {
+  //   if (mergedActivePickerIndex === 0) {
+  //     activeBarWidth = startInputDivRef.current.offsetWidth;
+  //   } else {
+  //     activeBarLeft = arrowLeft;
+  //     activeBarWidth = endInputDivRef.current.offsetWidth;
+  //   }
+  // }
+  // const activeBarPositionStyle =
+  //   direction === 'rtl' ? { right: activeBarLeft } : { left: activeBarLeft };
   // ============================ Return =============================
   const onContextSelect = (date: DateType, type: 'key' | 'mouse' | 'submit') => {
     const values = updateValues(selectedValue, date, mergedActivePickerIndex);
@@ -1141,14 +1141,14 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               autoComplete={autoComplete}
             />
           </div>
-          <div
+          {/* <div
             className={`${prefixCls}-active-bar`}
             style={{
               ...activeBarPositionStyle,
               width: activeBarWidth,
               position: 'absolute',
             }}
-          />
+          /> */}
           {suffixNode}
           {clearNode}
         </div>
