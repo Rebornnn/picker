@@ -381,9 +381,9 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     triggerOpen(true, index);
     // Use setTimeout to make sure panel DOM exists
     setTimeout(() => {
-      const inputRef = [startInputRef, endInputRef][index];
+      const inputRef = [startInputRef, endInputRef][0];
       if (inputRef.current) {
-        inputRef.current.focus();
+        inputRef.current.blur();
       }
     }, 0);
   }
@@ -623,7 +623,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   });
 
   const [endInputProps, { focused: endFocused, typing: endTyping }] = usePickerInput({
-    ...getSharedInputHookProps(1, resetEndText),
+    ...getSharedInputHookProps(0, resetEndText),
     open: endOpen,
     value: endText,
     onKeyDown: (e, preventDefault) => {
