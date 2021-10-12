@@ -1,6 +1,6 @@
 {
-  "name": "rc-picker",
-  "version": "2.5.18",
+  "name": "bonree-picker",
+  "version": "0.1.0",
   "description": "React date & time picker",
   "keywords": [
     "react",
