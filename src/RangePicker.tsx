@@ -870,7 +870,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     }
   }
 
-  const arrowPositionStyle = direction === 'rtl' ? { right: arrowLeft } : { left: arrowLeft };
+  // const arrowPositionStyle = direction === 'rtl' ? { right: arrowLeft } : { left: arrowLeft };
 
   function renderPanels() {
     let panels: React.ReactNode;
@@ -976,7 +976,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       className={classNames(`${prefixCls}-range-wrapper`, `${prefixCls}-${picker}-range-wrapper`)}
       style={{ minWidth: popupMinWidth }}
     >
-      <div className={`${prefixCls}-range-arrow`} style={arrowPositionStyle} />
+      {/* <div className={`${prefixCls}-range-arrow`} style={arrowPositionStyle} /> */}
 
       {renderPanels()}
     </div>
