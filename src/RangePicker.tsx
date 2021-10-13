@@ -9,6 +9,7 @@ import type { SharedTimeProps } from './panels/TimePanel';
 import PickerTrigger from './PickerTrigger';
 import PickerPanel from './PickerPanel';
 import usePickerInput from './hooks/usePickerInput';
+import type { UpdateValue } from './utils/miscUtil';
 import getDataOrAriaProps, { toArray, getValue, updateValues } from './utils/miscUtil';
 import { getDefaultFormat, getInputSize, elementsContains } from './utils/uiUtil';
 import type { ContextOperationRefProps } from './PanelContext';
@@ -253,6 +254,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     return [disabled || false, disabled || false];
   }, [disabled]);
 
+  const firstSelectedRef = useRef(true);
+
   // ============================= Value =============================
   const [mergedValue, setInnerValue] = useMergedState<RangeValue<DateType>>(null, {
     value,
@@ -383,7 +386,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     setTimeout(() => {
       const inputRef = [startInputRef, endInputRef][0];
       if (inputRef.current) {
-        inputRef.current.blur();
+        inputRef.current.focus();
       }
     }, 0);
   }
@@ -623,7 +626,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   });
 
   const [endInputProps, { focused: endFocused, typing: endTyping }] = usePickerInput({
-    ...getSharedInputHookProps(0, resetEndText),
+    ...getSharedInputHookProps(1, resetEndText),
     open: endOpen,
     value: endText,
     onKeyDown: (e, preventDefault) => {
@@ -809,7 +812,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           generateConfig={generateConfig}
           style={undefined}
           direction={direction}
-          disabledDate={mergedActivePickerIndex === 0 ? disabledStartDate : disabledEndDate}
+          // disabledDate={mergedActivePickerIndex === 0 ? disabledStartDate : disabledEndDate}
           disabledTime={(date) => {
             if (disabledTime) {
               return disabledTime(date, mergedActivePickerIndex === 0 ? 'start' : 'end');
@@ -1039,12 +1042,42 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   // const activeBarPositionStyle =
   //   direction === 'rtl' ? { right: activeBarLeft } : { left: activeBarLeft };
   // ============================ Return =============================
+  function refreshValues(
+    values: [DateType | null, DateType | null] | null,
+    value: DateType | UpdateValue<DateType>,
+    firstSelected: boolean,
+  ): [DateType, DateType] | null {
+    const newValues: [DateType | null, DateType | null] = [
+      getValue(values, 0),
+      getValue(values, 1),
+    ];
+
+    if (firstSelected) {
+      newValues[0] =
+        typeof value === 'function' ? (value as UpdateValue<DateType | null>)(newValues[0]) : value;
+      newValues[1] = null;
+    } else {
+      newValues[1] =
+        typeof value === 'function' ? (value as UpdateValue<DateType | null>)(newValues[1]) : value;
+    }
+
+    if (!newValues[0] && !newValues[1]) {
+      return null;
+    }
+
+    if (generateConfig.isAfter(newValues[0], newValues[1])) {
+      return [newValues[1], newValues[0]];
+    }
+    return newValues;
+  }
+
   const onContextSelect = (date: DateType, type: 'key' | 'mouse' | 'submit') => {
-    const values = updateValues(selectedValue, date, mergedActivePickerIndex);
+    // const values = updateValues(selectedValue, date, mergedActivePickerIndex);
+    const values = refreshValues(selectedValue, date, firstSelectedRef.current);
 
     if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {
       // triggerChange will also update selected values
-      triggerChange(values, mergedActivePickerIndex);
+      triggerChange(values, 0);
       // clear hover value style
       if (mergedActivePickerIndex === 0) {
         onStartLeave();
@@ -1054,6 +1087,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     } else {
       setSelectedValue(values);
     }
+
+    firstSelectedRef.current = !firstSelectedRef.current;
   };
 
   return (
