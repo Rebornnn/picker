@@ -7,8 +7,8 @@ import zhCN from '../src/locale/zh_CN';
 import '../assets/index.less';
 import './common.less';
 
-const defaultStartValue = moment('2019-09-03 05:02:03');
-const defaultEndValue = moment('2019-11-28 01:02:03');
+const defaultStartValue = moment('1990-02-03');
+const defaultEndValue = moment('1990-03-28');
 
 function formatDate(date: Moment | null) {
   return date ? date.format('YYYY-MM-DD HH:mm:ss') : 'null';
@@ -49,12 +49,13 @@ export default () => {
         <div style={{ margin: '0 8px' }}>
           <h3>Basic</h3>
           <RangePicker<Moment>
+            // open
             {...sharedProps}
             value={undefined}
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
-            defaultValue={[moment('1990-09-03'), moment('1989-11-28')]}
+            defaultValue={[moment('1990-02-03'), moment('1990-03-28')]}
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
           />
