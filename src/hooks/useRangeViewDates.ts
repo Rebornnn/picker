@@ -71,7 +71,7 @@ export default function useRangeViewDates<DateType>({
   picker: PickerMode;
   defaultDates: RangeValue<DateType> | undefined;
   generateConfig: GenerateConfig<DateType>;
-}): [(activePickerIndex: 0 | 1) => DateType, (viewDate: DateType | null, index: 0 | 1) => void] {
+}): [(activePickerIndex: 0 | 1) => DateType, (viewDate: DateType | null, index?: 0 | 1) => void] {
   const [defaultViewDates, setDefaultViewDates] = React.useState<
     [DateType | null, DateType | null]
   >(() => [getValue(defaultDates, 0), getValue(defaultDates, 1)]);

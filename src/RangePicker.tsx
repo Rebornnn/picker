@@ -237,7 +237,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const formatList = toArray(getDefaultFormat<DateType>(format, picker, showTime, use12Hours));
 
   // Active picker
-  const [mergedActivePickerIndex, setMergedActivePickerIndex] = useMergedState<0 | 1>(0, {
+  // const [mergedActivePickerIndex, setMergedActivePickerIndex] = useMergedState<0 | 1>(0, {
+  //   value: activePickerIndex,
+  // });
+  const [mergedActivePickerIndex] = useMergedState<0 | 1>(0, {
     value: activePickerIndex,
   });
 
@@ -351,19 +354,42 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   // ============================ Trigger ============================
   const triggerRef = React.useRef<any>();
 
-  function triggerOpen(newOpen: boolean, index: 0 | 1) {
+  // function triggerOpen(newOpen: boolean, index: 0 | 1) {
+  //   if (newOpen) {
+  //     clearTimeout(triggerRef.current);
+  //     openRecordsRef.current[index] = true;
+
+  //     setMergedActivePickerIndex(index);
+  //     triggerInnerOpen(newOpen);
+
+  //     // Open to reset view date
+  //     if (!mergedOpen) {
+  //       setViewDate(null, index);
+  //     }
+  //   } else if (mergedActivePickerIndex === index) {
+  //     triggerInnerOpen(newOpen);
+
+  //     // Clean up async
+  //     // This makes ref not quick refresh in case user open another input with blur trigger
+  //     const openRecords = openRecordsRef.current;
+  //     triggerRef.current = setTimeout(() => {
+  //       if (openRecords === openRecordsRef.current) {
+  //         openRecordsRef.current = {};
+  //       }
+  //     });
+  //   }
+  // }
+  function triggerOpen(newOpen: boolean) {
     if (newOpen) {
       clearTimeout(triggerRef.current);
-      openRecordsRef.current[index] = true;
 
-      setMergedActivePickerIndex(index);
       triggerInnerOpen(newOpen);
 
       // Open to reset view date
       if (!mergedOpen) {
-        setViewDate(null, index);
+        setViewDate(null);
       }
-    } else if (mergedActivePickerIndex === index) {
+    } else {
       triggerInnerOpen(newOpen);
 
       // Clean up async
@@ -377,16 +403,16 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     }
   }
 
-  function triggerOpenAndFocus(index: 0 | 1) {
-    triggerOpen(true, index);
-    // Use setTimeout to make sure panel DOM exists
-    setTimeout(() => {
-      const inputRef = [startInputRef, endInputRef][0];
-      if (inputRef.current) {
-        inputRef.current.blur();
-      }
-    }, 0);
-  }
+  // function triggerOpenAndFocus(index: 0 | 1) {
+  //   triggerOpen(true, index);
+  //   // Use setTimeout to make sure panel DOM exists
+  //   setTimeout(() => {
+  //     const inputRef = [startInputRef, endInputRef][0];
+  //     if (inputRef.current) {
+  //       inputRef.current.blur();
+  //     }
+  //   }, 0);
+  // }
 
   function triggerChange(newValue: RangeValue<DateType>, sourceIndex: 0 | 1) {
     let values = newValue;
@@ -478,9 +504,11 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       getValue(values, sourceIndex)
     ) {
       // Delay to focus to avoid input blur trigger expired selectedValues
-      triggerOpenAndFocus(nextOpenIndex);
+      // triggerOpenAndFocus(nextOpenIndex);
+      triggerOpen(true);
     } else {
-      triggerOpen(false, sourceIndex);
+      // triggerOpen(false, sourceIndex);
+      triggerOpen(false);
     }
   }
 
@@ -579,6 +607,39 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   };
 
   // ============================= Input =============================
+  // const getSharedInputHookProps = (index: 0 | 1, resetText: () => void) => ({
+  //   blurToCancel: needConfirmButton,
+  //   forwardKeyDown,
+  //   onBlur,
+  //   isClickOutside: (target: EventTarget | null) =>
+  //     !elementsContains(
+  //       [
+  //         panelDivRef.current,
+  //         startInputDivRef.current,
+  //         endInputDivRef.current,
+  //         containerRef.current,
+  //       ],
+  //       target as HTMLElement,
+  //     ),
+  //   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+  //     setMergedActivePickerIndex(index);
+  //     if (onFocus) {
+  //       onFocus(e);
+  //     }
+  //   },
+  //   triggerOpen: (newOpen: boolean) => {
+  //     triggerOpen(newOpen, index);
+  //   },
+  //   onSubmit: () => {
+  //     triggerChange(selectedValue, index);
+  //     resetText();
+  //   },
+  //   onCancel: () => {
+  //     triggerOpen(false, index);
+  //     setSelectedValue(mergedValue);
+  //     resetText();
+  //   },
+  // });
   const getSharedInputHookProps = (index: 0 | 1, resetText: () => void) => ({
     blurToCancel: needConfirmButton,
     forwardKeyDown,
@@ -594,20 +655,20 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         target as HTMLElement,
       ),
     onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-      setMergedActivePickerIndex(index);
+      // setMergedActivePickerIndex(index);
       if (onFocus) {
         onFocus(e);
       }
     },
     triggerOpen: (newOpen: boolean) => {
-      triggerOpen(newOpen, index);
+      triggerOpen(newOpen);
     },
     onSubmit: () => {
       triggerChange(selectedValue, index);
       resetText();
     },
     onCancel: () => {
-      triggerOpen(false, index);
+      triggerOpen(false);
       setSelectedValue(mergedValue);
       resetText();
     },
@@ -640,11 +701,12 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       !startInputRef.current.contains(e.target as Node) &&
       !endInputRef.current.contains(e.target as Node)
     ) {
-      if (!mergedDisabled[0]) {
-        triggerOpenAndFocus(0);
-      } else if (!mergedDisabled[1]) {
-        triggerOpenAndFocus(1);
-      }
+      // if (!mergedDisabled[0]) {
+      //   triggerOpenAndFocus(0);
+      // } else if (!mergedDisabled[1]) {
+      //   triggerOpenAndFocus(1);
+      // }
+      triggerOpen(true);
     }
   };
 
@@ -746,7 +808,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       label,
       onClick: () => {
         triggerChange(newValues, null);
-        triggerOpen(false, mergedActivePickerIndex);
+        // triggerOpen(false, mergedActivePickerIndex);
+        triggerOpen(false);
       },
       onMouseEnter: () => {
         setRangeHoverValue(newValues);
@@ -1013,7 +1076,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           }
 
           triggerChange(values, null);
-          triggerOpen(false, mergedActivePickerIndex);
+          // triggerOpen(false, mergedActivePickerIndex);
+          triggerOpen(false);
         }}
         className={`${prefixCls}-clear`}
       >
@@ -1040,6 +1104,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   //   direction === 'rtl' ? { right: activeBarLeft } : { left: activeBarLeft };
   // ============================ Return =============================
   const onContextSelect = (date: DateType, type: 'key' | 'mouse' | 'submit') => {
+    console.log(888, date);
+
     const values = updateValues(selectedValue, date, mergedActivePickerIndex);
 
     if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {

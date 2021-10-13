@@ -15,6 +15,8 @@ function formatDate(date: Moment | null) {
 }
 
 export default () => {
+  // 是否展开日期控件面板
+  const [panelOpen, setPanelOpen] = React.useState(false);
   const [value, setValue] = React.useState<[Moment | null, Moment | null] | null>([
     defaultStartValue,
     defaultEndValue,
@@ -41,6 +43,12 @@ export default () => {
 
   const rangePickerRef = React.useRef<RangePicker<Moment>>(null);
 
+  const handlePanelOpen = (open) => {
+    if (open) {
+      setPanelOpen(true);
+    }
+  };
+
   return (
     <div>
       <h2>Value: {value ? `${formatDate(value[0])} ~ ${formatDate(value[1])}` : 'null'}</h2>
@@ -49,8 +57,8 @@ export default () => {
         <div style={{ margin: '0 8px' }}>
           <h3>Basic</h3>
           <RangePicker<Moment>
-            // open
             {...sharedProps}
+            open={panelOpen}
             value={undefined}
             locale={zhCN}
             allowClear
@@ -58,6 +66,7 @@ export default () => {
             defaultValue={[moment('1990-02-03'), moment('1990-03-28')]}
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
+            onOpenChange={handlePanelOpen}
           />
           {/* <RangePicker<Moment>
             {...sharedProps}
