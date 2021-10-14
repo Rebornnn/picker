@@ -366,7 +366,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       if (!mergedOpen) {
         setViewDate(null, index);
       }
-    } else if (mergedActivePickerIndex === index) {
+    } else if (!firstSelectedRef.current) {
       triggerInnerOpen(newOpen);
 
       // Clean up async
@@ -440,7 +440,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         : '';
 
     if (onCalendarChange) {
-      const info: RangeInfo = { range: sourceIndex === 0 ? 'start' : 'end' };
+      // const info: RangeInfo = { range: sourceIndex === 0 ? 'start' : 'end' };
+      const info: RangeInfo = { range: firstSelectedRef.current ? 'start' : 'end' };
 
       onCalendarChange(values, [startStr, endStr], info);
     }
@@ -512,12 +513,14 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   };
 
   const [startValueTexts, firstStartValueText] = useValueTexts<DateType>(
-    getValue(selectedValue, 0),
+    // getValue(selectedValue, 0),
+    getValue(mergedValue, 0),
     sharedTextHooksProps,
   );
 
   const [endValueTexts, firstEndValueText] = useValueTexts<DateType>(
-    getValue(selectedValue, 1),
+    // getValue(selectedValue, 1),
+    getValue(mergedValue, 1),
     sharedTextHooksProps,
   );
 
@@ -564,16 +567,20 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   });
 
   const onDateMouseEnter = (date: DateType) => {
-    setHoverRangedValue(updateValues(selectedValue, date, mergedActivePickerIndex));
+    // setHoverRangedValue(updateValues(selectedValue, date, mergedActivePickerIndex));
+    setHoverRangedValue(refreshValues(selectedValue, date, firstSelectedRef.current));
     if (mergedActivePickerIndex === 0) {
-      onStartEnter(date);
+      // onStartEnter(date);
+      onStartEnter(null);
     } else {
-      onEndEnter(date);
+      // onEndEnter(date);
+      onEndEnter(null);
     }
   };
 
   const onDateMouseLeave = () => {
-    setHoverRangedValue(updateValues(selectedValue, null, mergedActivePickerIndex));
+    // setHoverRangedValue(updateValues(selectedValue, null, mergedActivePickerIndex));
+    setHoverRangedValue(refreshValues(selectedValue, null, firstSelectedRef.current));
     if (mergedActivePickerIndex === 0) {
       onStartLeave();
     } else {
@@ -1044,7 +1051,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   // ============================ Return =============================
   function refreshValues(
     values: [DateType | null, DateType | null] | null,
-    value: DateType | UpdateValue<DateType>,
+    nextValue: DateType | UpdateValue<DateType>,
     firstSelected: boolean,
   ): [DateType, DateType] | null {
     const newValues: [DateType | null, DateType | null] = [
@@ -1054,11 +1061,15 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
     if (firstSelected) {
       newValues[0] =
-        typeof value === 'function' ? (value as UpdateValue<DateType | null>)(newValues[0]) : value;
+        typeof nextValue === 'function'
+          ? (nextValue as UpdateValue<DateType | null>)(newValues[0])
+          : nextValue;
       newValues[1] = null;
     } else {
       newValues[1] =
-        typeof value === 'function' ? (value as UpdateValue<DateType | null>)(newValues[1]) : value;
+        typeof nextValue === 'function'
+          ? (nextValue as UpdateValue<DateType | null>)(newValues[1])
+          : nextValue;
     }
 
     if (!newValues[0] && !newValues[1]) {
@@ -1141,6 +1152,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               disabled={mergedDisabled[0]}
               readOnly={inputReadOnly || typeof formatList[0] === 'function' || !startTyping}
               value={startHoverValue || startText}
+              // value={startText}
               onChange={(e) => {
                 triggerStartTextChange(e.target.value);
               }}
@@ -1166,6 +1178,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               disabled={mergedDisabled[1]}
               readOnly={inputReadOnly || typeof formatList[0] === 'function' || !endTyping}
               value={endHoverValue || endText}
+              // value={endText}
               onChange={(e) => {
                 triggerEndTextChange(e.target.value);
               }}

@@ -15,6 +15,8 @@ function formatDate(date: Moment | null) {
 }
 
 export default () => {
+  // 是否展开日期控件面板
+  const [panelOpen, setPanelOpen] = React.useState(false);
   const [value, setValue] = React.useState<[Moment | null, Moment | null] | null>([
     defaultStartValue,
     defaultEndValue,
@@ -35,11 +37,18 @@ export default () => {
   const sharedProps = {
     generateConfig: momentGenerateConfig,
     value,
-    // onChange,
-    // onCalendarChange,
+    onChange,
+    onCalendarChange,
   };
 
   const rangePickerRef = React.useRef<RangePicker<Moment>>(null);
+
+  // 日期控件面板展开收起回调
+  function handlePanelOpen(open: boolean) {
+    if (open) {
+      setPanelOpen(true);
+    }
+  }
 
   return (
     <div>
@@ -49,15 +58,23 @@ export default () => {
         <div style={{ margin: '0 8px' }}>
           <h3>Basic</h3>
           <RangePicker<Moment>
-            // open
             {...sharedProps}
+            // open
+            open={panelOpen}
             value={undefined}
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
-            // defaultValue={[moment('1989-02-08'), moment('1990-03-28')]}
+            // defaultValue={[moment('1990-02-08'), moment('1990-03-28')]}
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
+            onOpenChange={handlePanelOpen}
+            renderExtraFooter={() => (
+              <>
+                <button onClick={() => setPanelOpen(false)}>确认</button>
+                <button onClick={() => setPanelOpen(false)}>取消</button>
+              </>
+            )}
           />
           {/* <RangePicker<Moment>
             {...sharedProps}
@@ -72,7 +89,7 @@ export default () => {
             onOk={dates => {
               console.log('OK!!!', dates);
             }}
-          />
+          /> */}
           <RangePicker<Moment>
             {...sharedProps}
             value={undefined}
@@ -82,7 +99,7 @@ export default () => {
             ranges={{
               test: [moment(), moment().add(1, 'hour')],
             }}
-          /> */}
+          />
         </div>
 
         {/* <div style={{ margin: '0 8px' }}>
