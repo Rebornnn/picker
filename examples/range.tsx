@@ -59,8 +59,7 @@ export default () => {
           <h3>Basic</h3>
           <RangePicker<Moment>
             {...sharedProps}
-            // open
-            open={panelOpen}
+            // open={panelOpen}
             value={undefined}
             locale={zhCN}
             allowClear
@@ -68,13 +67,13 @@ export default () => {
             // defaultValue={[moment('1990-02-08'), moment('1990-03-28')]}
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
-            onOpenChange={handlePanelOpen}
-            renderExtraFooter={() => (
-              <>
-                <button onClick={() => setPanelOpen(false)}>确认</button>
-                <button onClick={() => setPanelOpen(false)}>取消</button>
-              </>
-            )}
+            // onOpenChange={handlePanelOpen}
+            // renderExtraFooter={() => (
+            //   <>
+            //     <button onClick={() => setPanelOpen(false)}>确认</button>
+            //     <button onClick={() => setPanelOpen(false)}>取消</button>
+            //   </>
+            // )}
           />
           {/* <RangePicker<Moment>
             {...sharedProps}

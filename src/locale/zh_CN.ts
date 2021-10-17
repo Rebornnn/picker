@@ -6,6 +6,7 @@ const locale: Locale = {
   now: '此刻',
   backToToday: '返回今天',
   ok: '确定',
+  cancel: '取消',
   timeSelect: '选择时间',
   dateSelect: '选择日期',
   weekSelect: '选择周',

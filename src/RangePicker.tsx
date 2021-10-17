@@ -106,12 +106,14 @@ export type RangePickerSharedProps<DateType> = {
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onOk?: (dates: RangeValue<DateType>) => void;
+  onCancel?: () => void;
   direction?: 'ltr' | 'rtl';
   autoComplete?: string;
   /** @private Internal control of active picker. Do not use since it's private usage */
   activePickerIndex?: 0 | 1;
   dateRender?: RangeDateRender<DateType>;
   panelRender?: (originPanel: React.ReactNode) => React.ReactNode;
+  confirmButton?: boolean;
 };
 
 type OmitPickerProps<Props> = Omit<
@@ -213,15 +215,18 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     onMouseEnter,
     onMouseLeave,
     onOk,
+    onCancel,
     onKeyDown,
     components,
     order,
     direction,
     activePickerIndex,
     autoComplete = 'off',
+    confirmButton = true,
   } = props as MergedRangePickerProps<DateType>;
 
-  const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
+  // const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
+  const needConfirmButton: boolean = confirmButton || (picker === 'date' && !!showTime) || picker === 'time';
 
   // We record opened status here in case repeat open with picker
   const openRecordsRef = useRef<Record<number, boolean>>({});
@@ -366,7 +371,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       if (!mergedOpen) {
         setViewDate(null, index);
       }
-    } else if (!firstSelectedRef.current) {
+    } else if (confirmButton || !firstSelectedRef.current) {
       triggerInnerOpen(newOpen);
 
       // Clean up async
@@ -468,22 +473,26 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     // >>>>> Open picker when
 
     // Always open another picker if possible
-    let nextOpenIndex: 0 | 1 = null;
-    if (sourceIndex === 0 && !mergedDisabled[1]) {
-      nextOpenIndex = 1;
-    } else if (sourceIndex === 1 && !mergedDisabled[0]) {
-      nextOpenIndex = 0;
-    }
+    // let nextOpenIndex: 0 | 1 = null;
+    // if (sourceIndex === 0 && !mergedDisabled[1]) {
+    //   nextOpenIndex = 1;
+    // } else if (sourceIndex === 1 && !mergedDisabled[0]) {
+    //   nextOpenIndex = 0;
+    // }
 
-    if (
-      nextOpenIndex !== null &&
-      nextOpenIndex !== mergedActivePickerIndex &&
-      (!openRecordsRef.current[nextOpenIndex] || !getValue(values, nextOpenIndex)) &&
-      getValue(values, sourceIndex)
-    ) {
-      // Delay to focus to avoid input blur trigger expired selectedValues
-      triggerOpenAndFocus(nextOpenIndex);
-    } else {
+    // if (
+    //   nextOpenIndex !== null &&
+    //   nextOpenIndex !== mergedActivePickerIndex &&
+    //   (!openRecordsRef.current[nextOpenIndex] || !getValue(values, nextOpenIndex)) &&
+    //   getValue(values, sourceIndex)
+    // ) {
+    //   // Delay to focus to avoid input blur trigger expired selectedValues
+    //   triggerOpenAndFocus(nextOpenIndex);
+    // } else {
+    //   triggerOpen(false, sourceIndex);
+    // }
+
+    if (!needConfirmButton && !firstSelectedRef.current) {
       triggerOpen(false, sourceIndex);
     }
   }
@@ -901,11 +910,18 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       rangeList,
       onOk: () => {
         if (getValue(selectedValue, mergedActivePickerIndex)) {
-          // triggerChangeOld(selectedValue);
-          triggerChange(selectedValue, mergedActivePickerIndex);
+          // triggerChange(selectedValue, mergedActivePickerIndex);
+          setSelectedValue(selectedValue)
+          triggerOpen(false, mergedActivePickerIndex);
           if (onOk) {
             onOk(selectedValue);
           }
+        }
+      },
+      onCancel: () => {
+        triggerOpen(false, mergedActivePickerIndex);
+        if (onCancel) {
+          onCancel();
         }
       },
     });
@@ -1086,9 +1102,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     // const values = updateValues(selectedValue, date, mergedActivePickerIndex);
     const values = refreshValues(selectedValue, date, firstSelectedRef.current);
 
-    if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {
+    // if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {
+    if (type === 'submit' || (type === 'mouse')) {
       // triggerChange will also update selected values
-      triggerChange(values, 0);
+      triggerChange(values, mergedActivePickerIndex);
       // clear hover value style
       if (mergedActivePickerIndex === 0) {
         onStartLeave();

@@ -1,3 +1,4 @@
+import React from 'react';
 import type { GenerateConfig } from './generate';
 
 export type Locale = {
@@ -14,6 +15,7 @@ export type Locale = {
   now: string;
   backToToday: string;
   ok: string;
+  cancel?: string;
   timeSelect: string;
   dateSelect: string;
   weekSelect?: string;
@@ -95,7 +97,8 @@ export type EventValue<DateType> = DateType | null;
 export type RangeValue<DateType> = [EventValue<DateType>, EventValue<DateType>] | null;
 
 export type Components = {
-  button?: React.ComponentType | string;
+  okButton?: React.ComponentType | string;
+  cancelButton?: React.ComponentType | string;
   rangeItem?: React.ComponentType | string;
 };
 

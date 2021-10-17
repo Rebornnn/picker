@@ -6,6 +6,7 @@ const locale: Locale = {
   now: 'Now',
   backToToday: 'Back to today',
   ok: 'Ok',
+  cancel: 'Cancel',
   clear: 'Clear',
   month: 'Month',
   year: 'Year',
