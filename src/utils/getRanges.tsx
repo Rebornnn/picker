@@ -61,19 +61,19 @@ export default function getRanges({
     }
 
     okNode = needConfirmButton && (
-      <li className={`${prefixCls}-ok`}>
+      <span className={`${prefixCls}-ok`}>
         <OkButton disabled={okDisabled} onClick={onOk}>
           {locale.ok}
         </OkButton>
-      </li>
+      </span>
     );
 
     cancelNode = needConfirmButton && (
-      <li className={`${prefixCls}-cancel`}>
+      <span className={`${prefixCls}-cancel`}>
         <CancelButton disabled={okDisabled} onClick={onCancel}>
           {locale.cancel}
         </CancelButton>
-      </li>
+      </span>
     );
   }
 
