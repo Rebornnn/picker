@@ -914,6 +914,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         (disabledDate && disabledDate(selectedValue[mergedActivePickerIndex])),
       locale,
       rangeList,
+      isRange: true,
       onOk: () => {
         // if (getValue(selectedValue, mergedActivePickerIndex)) {
         if (getValue(selectedValue, 0) && getValue(selectedValue, 1)) {
