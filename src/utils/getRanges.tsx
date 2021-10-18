@@ -68,13 +68,15 @@ export default function getRanges({
       </span>
     );
 
-    cancelNode = needConfirmButton && (
-      <span className={`${prefixCls}-cancel`}>
-        <CancelButton disabled={okDisabled} onClick={onCancel}>
-          {locale.cancel}
-        </CancelButton>
-      </span>
-    );
+    if (rangeList.length) {
+      cancelNode = needConfirmButton && (
+        <span className={`${prefixCls}-cancel`}>
+          <CancelButton disabled={okDisabled} onClick={onCancel}>
+            {locale.cancel}
+          </CancelButton>
+        </span>
+      );
+    }
   }
 
   if (!presetNode && !okNode) {
@@ -86,7 +88,7 @@ export default function getRanges({
       {presetNode}
       <li className={`${prefixCls}-btns`}>
         {okNode}
-        {cancelNode}
+        {rangeList.length ? cancelNode : null}
       </li>
     </ul>
   );
