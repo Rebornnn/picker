@@ -67,6 +67,8 @@ export default () => {
             // defaultValue={[moment('1990-02-08'), moment('1990-03-28')]}
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
+            onOk={(v, s) => console.log(v, s)}
+            onCancel={(v) => console.log(v)}
             // onOpenChange={handlePanelOpen}
             // renderExtraFooter={() => (
             //   <>

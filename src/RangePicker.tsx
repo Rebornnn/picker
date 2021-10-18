@@ -105,7 +105,7 @@ export type RangePickerSharedProps<DateType> = {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
-  onOk?: (dates: RangeValue<DateType>) => void;
+  onOk?: (dates: RangeValue<DateType>, formatString: [string, string]) => void;
   onCancel?: (dates: RangeValue<DateType>) => void;
   direction?: 'ltr' | 'rtl';
   autoComplete?: string;
@@ -918,17 +918,14 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         // if (getValue(selectedValue, mergedActivePickerIndex)) {
         if (getValue(selectedValue, 0) && getValue(selectedValue, 1)) {
           // triggerChange(selectedValue, mergedActivePickerIndex);
-          if (onChange) {
-            onChange(selectedValue, [
-              formatValue(selectedValue[0], { generateConfig, locale, format: formatList[0] }),
-              formatValue(selectedValue[1], { generateConfig, locale, format: formatList[0] }),
-            ]);
-          }
           preSelectedValues.current = selectedValue;
           setSelectedValue(selectedValue);
           triggerOpen(false, mergedActivePickerIndex);
           if (onOk) {
-            onOk(selectedValue);
+            onOk(selectedValue, [
+              formatValue(selectedValue[0], { generateConfig, locale, format: formatList[0] }),
+              formatValue(selectedValue[1], { generateConfig, locale, format: formatList[0] }),
+            ]);
           }
         }
       },
