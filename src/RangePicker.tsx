@@ -106,7 +106,7 @@ export type RangePickerSharedProps<DateType> = {
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onOk?: (dates: RangeValue<DateType>) => void;
-  onCancel?: () => void;
+  onCancel?: (dates: RangeValue<DateType>) => void;
   direction?: 'ltr' | 'rtl';
   autoComplete?: string;
   /** @private Internal control of active picker. Do not use since it's private usage */
@@ -226,7 +226,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   } = props as MergedRangePickerProps<DateType>;
 
   // const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
-  const needConfirmButton: boolean = confirmButton || (picker === 'date' && !!showTime) || picker === 'time';
+  const needConfirmButton: boolean =
+    confirmButton || (picker === 'date' && !!showTime) || picker === 'time';
 
   // We record opened status here in case repeat open with picker
   const openRecordsRef = useRef<Record<number, boolean>>({});
@@ -259,7 +260,11 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     return [disabled || false, disabled || false];
   }, [disabled]);
 
+  // 点击第一下
   const firstSelectedRef = useRef(true);
+
+  // 上次选中values
+  const preSelectedValues = useRef<RangeValue<DateType>>([null, null]);
 
   // ============================= Value =============================
   const [mergedValue, setInnerValue] = useMergedState<RangeValue<DateType>>(null, {
@@ -464,7 +469,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       if (
         onChange &&
         (!isEqual(generateConfig, getValue(mergedValue, 0), startValue) ||
-          !isEqual(generateConfig, getValue(mergedValue, 1), endValue))
+          !isEqual(generateConfig, getValue(mergedValue, 1), endValue)) &&
+        !needConfirmButton
       ) {
         onChange(values, [startStr, endStr]);
       }
@@ -909,9 +915,17 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       locale,
       rangeList,
       onOk: () => {
-        if (getValue(selectedValue, mergedActivePickerIndex)) {
+        // if (getValue(selectedValue, mergedActivePickerIndex)) {
+        if (getValue(selectedValue, 0) && getValue(selectedValue, 1)) {
           // triggerChange(selectedValue, mergedActivePickerIndex);
-          setSelectedValue(selectedValue)
+          if (onChange) {
+            onChange(selectedValue, [
+              formatValue(selectedValue[0], { generateConfig, locale, format: formatList[0] }),
+              formatValue(selectedValue[1], { generateConfig, locale, format: formatList[0] }),
+            ]);
+          }
+          preSelectedValues.current = selectedValue;
+          setSelectedValue(selectedValue);
           triggerOpen(false, mergedActivePickerIndex);
           if (onOk) {
             onOk(selectedValue);
@@ -919,9 +933,11 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         }
       },
       onCancel: () => {
+        setInnerValue(preSelectedValues.current);
+        setSelectedValue(preSelectedValues.current);
         triggerOpen(false, mergedActivePickerIndex);
         if (onCancel) {
-          onCancel();
+          onCancel(preSelectedValues.current);
         }
       },
     });
@@ -1103,7 +1119,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     const values = refreshValues(selectedValue, date, firstSelectedRef.current);
 
     // if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {
-    if (type === 'submit' || (type === 'mouse')) {
+    if (type === 'submit' || type === 'mouse') {
       // triggerChange will also update selected values
       triggerChange(values, mergedActivePickerIndex);
       // clear hover value style

@@ -21,6 +21,7 @@ export default function getRanges({
   needConfirmButton,
   onNow,
   onOk,
+  onCancel,
   okDisabled,
   showNow,
   locale,
@@ -69,7 +70,7 @@ export default function getRanges({
 
     cancelNode = needConfirmButton && (
       <li className={`${prefixCls}-cancel`}>
-        <CancelButton disabled={okDisabled} onClick={onOk}>
+        <CancelButton disabled={okDisabled} onClick={onCancel}>
           {locale.cancel}
         </CancelButton>
       </li>
