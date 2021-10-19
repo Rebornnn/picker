@@ -60,6 +60,7 @@ export default () => {
           <RangePicker<Moment>
             {...sharedProps}
             // open={panelOpen}
+            defaultValue={[moment('1989-02-08'),moment('1989-03-08')]}
             value={undefined}
             locale={zhCN}
             allowClear

@@ -264,7 +264,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const firstSelectedRef = useRef(true);
 
   // 上次选中values
-  const preSelectedValues = useRef<RangeValue<DateType>>([null, null]);
+  const preSelectedValues = useRef<RangeValue<DateType>>(defaultValue || [null, null]);
 
   // ============================= Value =============================
   const [mergedValue, setInnerValue] = useMergedState<RangeValue<DateType>>(null, {
