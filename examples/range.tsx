@@ -65,11 +65,12 @@ export default () => {
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
-            // defaultValue={[moment('1990-02-08'), moment('1990-03-28')]}
             clearIcon={<span>X</span>}
             suffixIcon={<span>O</span>}
             onOk={(v, s) => console.log(v, s)}
             onCancel={(v) => console.log(v)}
+            disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
+            // confirmButton={false}
             // onOpenChange={handlePanelOpen}
             // renderExtraFooter={() => (
             //   <>
@@ -92,7 +93,7 @@ export default () => {
               console.log('OK!!!', dates);
             }}
           /> */}
-          <RangePicker<Moment>
+          {/* <RangePicker<Moment>
             {...sharedProps}
             value={undefined}
             locale={zhCN}
@@ -101,7 +102,7 @@ export default () => {
             ranges={{
               test: [moment(), moment().add(1, 'hour')],
             }}
-          />
+          /> */}
         </div>
 
         {/* <div style={{ margin: '0 8px' }}>

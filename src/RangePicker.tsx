@@ -379,6 +379,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     } else if (confirmButton || !firstSelectedRef.current) {
       triggerInnerOpen(newOpen);
 
+      if (confirmButton) {
+        setInnerValue(preSelectedValues.current);
+        setSelectedValue(preSelectedValues.current);
+      }
       // Clean up async
       // This makes ref not quick refresh in case user open another input with blur trigger
       const openRecords = openRecordsRef.current;
@@ -931,8 +935,6 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         }
       },
       onCancel: () => {
-        setInnerValue(preSelectedValues.current);
-        setSelectedValue(preSelectedValues.current);
         triggerOpen(false, mergedActivePickerIndex);
         if (onCancel) {
           onCancel(preSelectedValues.current);
