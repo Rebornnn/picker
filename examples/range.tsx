@@ -22,7 +22,7 @@ export default () => {
     defaultEndValue,
   ]);
 
-  const onChange = (newValue: [Moment | null, Moment | null] | null, formatStrings?: string[]) => {
+  const onOk = (newValue: [Moment | null, Moment | null] | null, formatStrings?: string[]) => {
     console.log('Change:', newValue, formatStrings);
     setValue(newValue);
   };
@@ -37,7 +37,7 @@ export default () => {
   const sharedProps = {
     generateConfig: momentGenerateConfig,
     value,
-    onChange,
+    onOk,
     // onCalendarChange,
   };
 
@@ -60,7 +60,7 @@ export default () => {
           <RangePicker<Moment>
             {...sharedProps}
             // open={panelOpen}
-            defaultValue={[moment('1989-02-08'), moment('1989-03-08')]}
+            // defaultValue={[moment('1989-02-08'), moment('1989-03-08')]}
             value={undefined}
             locale={zhCN}
             allowClear
@@ -69,7 +69,7 @@ export default () => {
             suffixIcon={<span>O</span>}
             onOk={(v, s) => console.log(v, s)}
             onCancel={(v) => console.log(v)}
-            disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
+            // disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
             // confirmButton={false}
             // onOpenChange={handlePanelOpen}
             // renderExtraFooter={() => (
@@ -122,17 +122,17 @@ export default () => {
           >
             Focus!
           </button>
-        </div>
+        </div> */}
 
         <div style={{ margin: '0 8px' }}>
           <h3>Year</h3>
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="year" />
         </div>
 
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Quarter</h3>
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="quarter" />
-        </div>
+        </div> */}
 
         <div style={{ margin: '0 8px' }}>
           <h3>Month</h3>
@@ -144,7 +144,7 @@ export default () => {
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="week" />
         </div>
 
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Allow Empty</h3>
           <RangePicker<Moment>
             {...sharedProps}

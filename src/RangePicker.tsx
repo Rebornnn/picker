@@ -16,7 +16,7 @@ import type { ContextOperationRefProps } from './PanelContext';
 import PanelContext from './PanelContext';
 import {
   isEqual,
-  // getClosingViewDate,
+  getClosingViewDate,
   isSameDate,
   isSameWeek,
   isSameQuarter,
@@ -265,7 +265,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const firstSelectedRef = useRef(true);
 
   // 上次选中values
-  const preSelectedValues = useRef<RangeValue<DateType>>(value || defaultValue || [null, null]);
+  const preSelectedValues = useRef<RangeValue<DateType>>(value || defaultValue || null);
 
   // ============================= Value =============================
   const [mergedValue, setInnerValue] = useMergedState<RangeValue<DateType>>(null, {
@@ -283,7 +283,13 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   //   defaultDates: defaultPickerValue,
   //   generateConfig,
   // });
-  const viewDate = useRef<RangeValue<DateType>>(mergedValue || defaultPickerValue || [null, null]);
+  const viewDate = useRef<RangeValue<DateType>>(
+    mergedValue ||
+      defaultPickerValue || [
+        generateConfig.getNow(),
+        getClosingViewDate(generateConfig.getNow(), picker, generateConfig, 1),
+      ],
+  );
 
   // ========================= Select Values =========================
   const [selectedValue, setSelectedValue] = useMergedState(mergedValue, {
@@ -375,8 +381,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       triggerInnerOpen(newOpen);
 
       // Open to reset view date
-      if (!mergedOpen) {
-        // setViewDate(null, index);
+      // if (!mergedOpen) {
+      //   setViewDate(null, index);
+      // }
+      if (!mergedOpen && selectedValue) {
         viewDate.current = selectedValue;
       }
     } else if (confirmButton || !firstSelectedRef.current) {
@@ -385,7 +393,9 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       if (confirmButton) {
         setInnerValue(preSelectedValues.current);
         setSelectedValue(preSelectedValues.current);
-        viewDate.current = preSelectedValues.current;
+        if (preSelectedValues.current) {
+          viewDate.current = preSelectedValues.current;
+        }
       }
       // Clean up async
       // This makes ref not quick refresh in case user open another input with blur trigger
