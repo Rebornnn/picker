@@ -10,7 +10,7 @@ export type RangeContextProps = {
   hoverRangedValue?: RangeValue<any>;
   inRange?: boolean;
   panelPosition?: 'left' | 'right' | false;
-  isClosing?: boolean;
+  isFar?: boolean;
 };
 
 const RangeContext = React.createContext<RangeContextProps>({});

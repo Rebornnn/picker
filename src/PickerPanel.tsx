@@ -182,8 +182,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   } = panelContext;
 
   // const { inRange, panelPosition, rangedValue, hoverRangedValue } = React.useContext(RangeContext);
-  const { panelPosition, rangedValue, hoverRangedValue, isClosing } =
-    React.useContext(RangeContext);
+  const { panelPosition, rangedValue, hoverRangedValue, isFar } = React.useContext(RangeContext);
   const panelRef = React.useRef<PanelRefProps>({});
 
   // Handle init logic
@@ -543,8 +542,8 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         hideHeader: 'hideHeader' in props ? hideHeader : panelContext.hideHeader,
         // hidePrevBtn: inRange && panelPosition === 'right',
         // hideNextBtn: inRange && panelPosition === 'left',
-        hidePrevBtn: isClosing && panelPosition === 'right',
-        hideNextBtn: isClosing && panelPosition === 'left',
+        hidePrevBtn: !isFar && panelPosition === 'right',
+        hideNextBtn: !isFar && panelPosition === 'left',
       }}
     >
       <div

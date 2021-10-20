@@ -7,8 +7,8 @@ import zhCN from '../src/locale/zh_CN';
 import '../assets/index.less';
 import './common.less';
 
-const defaultStartValue = moment('1989-02-08');
-const defaultEndValue = moment('1990-03-28');
+const defaultStartValue = moment('1990-01-08');
+const defaultEndValue = moment('1990-02-20');
 
 function formatDate(date: Moment | null) {
   return date ? date.format('YYYY-MM-DD HH:mm:ss') : 'null';
@@ -60,14 +60,13 @@ export default () => {
           <RangePicker<Moment>
             {...sharedProps}
             // open={panelOpen}
-            defaultValue={[moment('1989-02-08'), moment('1989-03-08')]}
-            value={undefined}
+            defaultValue={[moment('1989-02-08'), moment('1989-03-20')]}
+            // value={undefined}
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
             // clearIcon={<span>X</span>}
             // suffixIcon={<span>O</span>}
-            onOk={(v, s) => console.log(v, s)}
             onCancel={(v) => console.log(v)}
             // disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
             // confirmButton={false}
@@ -79,7 +78,7 @@ export default () => {
             //   </>
             // )}
           />
-          <RangePicker<Moment>
+          {/* <RangePicker<Moment>
             {...sharedProps}
             locale={zhCN}
             allowClear
@@ -92,7 +91,7 @@ export default () => {
             onOk={(dates) => {
               console.log('OK!!!', dates);
             }}
-          />
+          /> */}
           {/* <RangePicker<Moment>
             {...sharedProps}
             value={undefined}

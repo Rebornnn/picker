@@ -838,17 +838,17 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     return (
       <RangeContext.Provider
         value={{
-          // inRange: true,
+          inRange: true,
           panelPosition,
           rangedValue: rangeHoverValue || selectedValue,
           hoverRangedValue: panelHoverRangedValue,
-          isClosing:
+          isFar:
             getStartEndDistance(
               getValue(viewDate.current, 0),
               getValue(viewDate.current, 1),
               picker,
               generateConfig,
-            ) === 'closing',
+            ) === 'far',
         }}
       >
         <PickerPanel<DateType>
@@ -985,14 +985,19 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       //     );
       //   },
       // });
+      const leftPickValue = getValue(viewDate.current, 0);
+      let rightPickValue = getValue(viewDate.current, 1);
+      if (getStartEndDistance(leftPickValue, rightPickValue, picker, generateConfig) === 'same') {
+        rightPickValue = getClosingViewDate(leftPickValue, picker, generateConfig);
+      }
       const leftPanel = renderPanel(showDoublePanel ? 'left' : false, {
-        pickerValue: getValue(viewDate.current, 0) || generateConfig.getNow(),
+        pickerValue: leftPickValue,
         onPickerValueChange: (newViewDate) => {
           viewDate.current = updateValues(viewDate.current, newViewDate, 0);
         },
       });
       const rightPanel = renderPanel('right', {
-        pickerValue: getValue(viewDate.current, 1) || generateConfig.getNow(),
+        pickerValue: rightPickValue,
         onPickerValueChange: (newViewDate) => {
           viewDate.current = updateValues(viewDate.current, newViewDate, 1);
         },
