@@ -408,16 +408,16 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     }
   }
 
-  function triggerOpenAndFocus(index: 0 | 1) {
-    triggerOpen(true, index);
-    // Use setTimeout to make sure panel DOM exists
-    setTimeout(() => {
-      const inputRef = [startInputRef, endInputRef][0];
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, 0);
-  }
+  // function triggerOpenAndFocus(index: 0 | 1) {
+  //   triggerOpen(true, index);
+  //   // Use setTimeout to make sure panel DOM exists
+  //   setTimeout(() => {
+  //     const inputRef = [startInputRef, endInputRef][0];
+  //     if (inputRef.current) {
+  //       inputRef.current.focus();
+  //     }
+  //   }, 0);
+  // }
 
   function triggerChange(newValue: RangeValue<DateType>, sourceIndex: 0 | 1) {
     let values = newValue;
@@ -676,21 +676,21 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   });
 
   // ========================== Click Picker ==========================
-  const onPickerClick = (e: MouseEvent) => {
-    // When click inside the picker & outside the picker's input elements
-    // the panel should still be opened
-    if (
-      !mergedOpen &&
-      !startInputRef.current.contains(e.target as Node) &&
-      !endInputRef.current.contains(e.target as Node)
-    ) {
-      if (!mergedDisabled[0]) {
-        triggerOpenAndFocus(0);
-      } else if (!mergedDisabled[1]) {
-        triggerOpenAndFocus(1);
-      }
-    }
-  };
+  // const onPickerClick = (e: MouseEvent) => {
+  //   // When click inside the picker & outside the picker's input elements
+  //   // the panel should still be opened
+  //   if (
+  //     !mergedOpen &&
+  //     !startInputRef.current.contains(e.target as Node) &&
+  //     !endInputRef.current.contains(e.target as Node)
+  //   ) {
+  //     if (!mergedDisabled[0]) {
+  //       triggerOpenAndFocus(0);
+  //     } else if (!mergedDisabled[1]) {
+  //       triggerOpenAndFocus(1);
+  //     }
+  //   }
+  // };
 
   const onPickerMouseDown = (e: MouseEvent) => {
     // shouldn't affect input elements if picker is active
@@ -1068,7 +1068,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   if (
     allowClear &&
     ((getValue(mergedValue, 0) && !mergedDisabled[0]) ||
-      (getValue(mergedValue, 1) && !mergedDisabled[1]))
+      (getValue(mergedValue, 1) && !mergedDisabled[1])) &&
+    !mergedOpen
   ) {
     clearNode = (
       <span
@@ -1088,6 +1089,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
             values = updateValues(values, null, 1);
           }
 
+          preSelectedValues.current = values;
           triggerChange(values, null);
           triggerOpen(false, mergedActivePickerIndex);
         }}
@@ -1201,7 +1203,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
             [`${prefixCls}-rtl`]: direction === 'rtl',
           })}
           style={style}
-          onClick={onPickerClick}
+          // onClick={onPickerClick}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           onMouseDown={onPickerMouseDown}

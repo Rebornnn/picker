@@ -60,13 +60,13 @@ export default () => {
           <RangePicker<Moment>
             {...sharedProps}
             // open={panelOpen}
-            // defaultValue={[moment('1989-02-08'), moment('1989-03-08')]}
+            defaultValue={[moment('1989-02-08'), moment('1989-03-08')]}
             value={undefined}
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
-            clearIcon={<span>X</span>}
-            suffixIcon={<span>O</span>}
+            // clearIcon={<span>X</span>}
+            // suffixIcon={<span>O</span>}
             onOk={(v, s) => console.log(v, s)}
             onCancel={(v) => console.log(v)}
             // disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
@@ -79,20 +79,20 @@ export default () => {
             //   </>
             // )}
           />
-          {/* <RangePicker<Moment>
+          <RangePicker<Moment>
             {...sharedProps}
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
             showTime
             style={{ width: 700 }}
-            ranges={{
-              ranges: [moment(), moment().add(10, 'day')],
-            }}
-            onOk={dates => {
+            // ranges={{
+            //   ranges: [moment(), moment().add(10, 'day')],
+            // }}
+            onOk={(dates) => {
               console.log('OK!!!', dates);
             }}
-          /> */}
+          />
           {/* <RangePicker<Moment>
             {...sharedProps}
             value={undefined}
@@ -124,17 +124,17 @@ export default () => {
           </button>
         </div> */}
 
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Year</h3>
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="year" />
-        </div>
+        </div> */}
 
         {/* <div style={{ margin: '0 8px' }}>
           <h3>Quarter</h3>
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="quarter" />
         </div> */}
 
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Month</h3>
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="month" />
         </div>
@@ -142,7 +142,7 @@ export default () => {
         <div style={{ margin: '0 8px' }}>
           <h3>Week</h3>
           <RangePicker<Moment> {...sharedProps} locale={zhCN} picker="week" />
-        </div>
+        </div> */}
 
         {/* <div style={{ margin: '0 8px' }}>
           <h3>Allow Empty</h3>
