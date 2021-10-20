@@ -16,7 +16,7 @@ import type { ContextOperationRefProps } from './PanelContext';
 import PanelContext from './PanelContext';
 import {
   isEqual,
-  getClosingViewDate,
+  // getClosingViewDate,
   isSameDate,
   isSameWeek,
   isSameQuarter,
@@ -31,7 +31,8 @@ import RangeContext from './RangeContext';
 import useRangeDisabled from './hooks/useRangeDisabled';
 import getExtraFooter from './utils/getExtraFooter';
 import getRanges from './utils/getRanges';
-import useRangeViewDates from './hooks/useRangeViewDates';
+// import useRangeViewDates from './hooks/useRangeViewDates';
+import { getStartEndDistance } from './hooks/useRangeViewDates';
 import type { DateRender } from './panels/DatePanel/DateBody';
 import useHoverValue from './hooks/useHoverValue';
 
@@ -264,7 +265,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const firstSelectedRef = useRef(true);
 
   // 上次选中values
-  const preSelectedValues = useRef<RangeValue<DateType>>(defaultValue || [null, null]);
+  const preSelectedValues = useRef<RangeValue<DateType>>(value || defaultValue || [null, null]);
 
   // ============================= Value =============================
   const [mergedValue, setInnerValue] = useMergedState<RangeValue<DateType>>(null, {
@@ -276,12 +277,13 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
   // =========================== View Date ===========================
   // Config view panel
-  const [getViewDate, setViewDate] = useRangeViewDates({
-    values: mergedValue,
-    picker,
-    defaultDates: defaultPickerValue,
-    generateConfig,
-  });
+  // const [getViewDate, setViewDate] = useRangeViewDates({
+  //   values: mergedValue,
+  //   picker,
+  //   defaultDates: defaultPickerValue,
+  //   generateConfig,
+  // });
+  const viewDate = useRef<RangeValue<DateType>>(mergedValue || defaultPickerValue || [null, null]);
 
   // ========================= Select Values =========================
   const [selectedValue, setSelectedValue] = useMergedState(mergedValue, {
@@ -374,7 +376,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
       // Open to reset view date
       if (!mergedOpen) {
-        setViewDate(null, index);
+        // setViewDate(null, index);
+        viewDate.current = selectedValue;
       }
     } else if (confirmButton || !firstSelectedRef.current) {
       triggerInnerOpen(newOpen);
@@ -382,6 +385,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       if (confirmButton) {
         setInnerValue(preSelectedValues.current);
         setSelectedValue(preSelectedValues.current);
+        viewDate.current = preSelectedValues.current;
       }
       // Clean up async
       // This makes ref not quick refresh in case user open another input with blur trigger
@@ -554,7 +558,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
     if (inputDate && !disabledFunc(inputDate)) {
       setSelectedValue(updateValues(selectedValue, inputDate, index));
-      setViewDate(inputDate, index);
+      // setViewDate(inputDate, index);
+      viewDate.current = updateValues(viewDate.current, inputDate, index);
     }
   };
 
@@ -823,10 +828,17 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     return (
       <RangeContext.Provider
         value={{
-          inRange: true,
+          // inRange: true,
           panelPosition,
           rangedValue: rangeHoverValue || selectedValue,
           hoverRangedValue: panelHoverRangedValue,
+          isClosing:
+            getStartEndDistance(
+              getValue(viewDate.current, 0),
+              getValue(viewDate.current, 1),
+              picker,
+              generateConfig,
+            ) === 'closing',
         }}
       >
         <PickerPanel<DateType>
@@ -865,11 +877,11 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               updateValues(selectedValue, date, mergedActivePickerIndex),
             );
 
-            let viewDate = date;
-            if (panelPosition === 'right' && mergedModes[mergedActivePickerIndex] === newMode) {
-              viewDate = getClosingViewDate(viewDate, newMode as any, generateConfig, -1);
-            }
-            setViewDate(viewDate, mergedActivePickerIndex);
+            // let viewDate = date;
+            // if (panelPosition === 'right' && mergedModes[mergedActivePickerIndex] === newMode) {
+            //   viewDate = getClosingViewDate(viewDate, newMode as any, generateConfig, -1);
+            // }
+            // setViewDate(viewDate, mergedActivePickerIndex);
           }}
           onOk={null}
           onSelect={undefined}
@@ -943,24 +955,36 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     });
 
     if (picker !== 'time' && !showTime) {
-      const viewDate = getViewDate(mergedActivePickerIndex);
-      const nextViewDate = getClosingViewDate(viewDate, picker, generateConfig);
+      // const viewDate = getViewDate(mergedActivePickerIndex);
+      // const nextViewDate = getClosingViewDate(viewDate, picker, generateConfig);
       const currentMode = mergedModes[mergedActivePickerIndex];
 
       const showDoublePanel = currentMode === picker;
+      // const leftPanel = renderPanel(showDoublePanel ? 'left' : false, {
+      //   pickerValue: viewDate,
+      //   onPickerValueChange: (newViewDate) => {
+      //     setViewDate(newViewDate, mergedActivePickerIndex);
+      //   },
+      // });
+      // const rightPanel = renderPanel('right', {
+      //   pickerValue: nextViewDate,
+      //   onPickerValueChange: (newViewDate) => {
+      //     setViewDate(
+      //       getClosingViewDate(newViewDate, picker, generateConfig, -1),
+      //       mergedActivePickerIndex,
+      //     );
+      //   },
+      // });
       const leftPanel = renderPanel(showDoublePanel ? 'left' : false, {
-        pickerValue: viewDate,
+        pickerValue: getValue(viewDate.current, 0) || generateConfig.getNow(),
         onPickerValueChange: (newViewDate) => {
-          setViewDate(newViewDate, mergedActivePickerIndex);
+          viewDate.current = updateValues(viewDate.current, newViewDate, 0);
         },
       });
       const rightPanel = renderPanel('right', {
-        pickerValue: nextViewDate,
+        pickerValue: getValue(viewDate.current, 1) || generateConfig.getNow(),
         onPickerValueChange: (newViewDate) => {
-          setViewDate(
-            getClosingViewDate(newViewDate, picker, generateConfig, -1),
-            mergedActivePickerIndex,
-          );
+          viewDate.current = updateValues(viewDate.current, newViewDate, 1);
         },
       });
 
@@ -1185,7 +1209,6 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               disabled={mergedDisabled[0]}
               readOnly={inputReadOnly || typeof formatList[0] === 'function' || !startTyping}
               value={startHoverValue || startText}
-              // value={startText}
               onChange={(e) => {
                 triggerStartTextChange(e.target.value);
               }}
@@ -1211,7 +1234,6 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               disabled={mergedDisabled[1]}
               readOnly={inputReadOnly || typeof formatList[0] === 'function' || !endTyping}
               value={endHoverValue || endText}
-              // value={endText}
               onChange={(e) => {
                 triggerEndTextChange(e.target.value);
               }}

@@ -4,7 +4,7 @@ import type { GenerateConfig } from '../generate';
 import { getValue, updateValues } from '../utils/miscUtil';
 import { getClosingViewDate, isSameYear, isSameMonth, isSameDecade } from '../utils/dateUtil';
 
-function getStartEndDistance<DateType>(
+export function getStartEndDistance<DateType>(
   startDate: DateType,
   endDate: DateType,
   picker: PickerMode,

@@ -16,7 +16,7 @@ function formatDate(date: Moment | null) {
 
 export default () => {
   // 是否展开日期控件面板
-  const [panelOpen, setPanelOpen] = React.useState(false);
+  // const [panelOpen, setPanelOpen] = React.useState(false);
   const [value, setValue] = React.useState<[Moment | null, Moment | null] | null>([
     defaultStartValue,
     defaultEndValue,
@@ -27,28 +27,28 @@ export default () => {
     setValue(newValue);
   };
 
-  const onCalendarChange = (
-    newValue: [Moment | null, Moment | null] | null,
-    formatStrings?: string[],
-  ) => {
-    console.log('Calendar Change:', newValue, formatStrings);
-  };
+  // const onCalendarChange = (
+  //   newValue: [Moment | null, Moment | null] | null,
+  //   formatStrings?: string[],
+  // ) => {
+  //   console.log('Calendar Change:', newValue, formatStrings);
+  // };
 
   const sharedProps = {
     generateConfig: momentGenerateConfig,
     value,
     onChange,
-    onCalendarChange,
+    // onCalendarChange,
   };
 
   const rangePickerRef = React.useRef<RangePicker<Moment>>(null);
 
   // 日期控件面板展开收起回调
-  function handlePanelOpen(open: boolean) {
-    if (open) {
-      setPanelOpen(true);
-    }
-  }
+  // function handlePanelOpen(open: boolean) {
+  //   if (open) {
+  //     setPanelOpen(true);
+  //   }
+  // }
 
   return (
     <div>
@@ -60,7 +60,7 @@ export default () => {
           <RangePicker<Moment>
             {...sharedProps}
             // open={panelOpen}
-            defaultValue={[moment('1989-02-08'),moment('1989-03-08')]}
+            defaultValue={[moment('1989-02-08'), moment('1989-03-08')]}
             value={undefined}
             locale={zhCN}
             allowClear
