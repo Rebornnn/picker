@@ -36,7 +36,7 @@ export default () => {
 
   const sharedProps = {
     generateConfig: momentGenerateConfig,
-    value,
+    // value,
     onOk,
     // onCalendarChange,
   };
@@ -57,7 +57,7 @@ export default () => {
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div style={{ margin: '0 8px' }}>
           <h3>Basic</h3>
-          <RangePicker<Moment>
+          {/* <RangePicker<Moment>
             {...sharedProps}
             // open={panelOpen}
             defaultValue={[moment('1989-02-08'), moment('1989-03-20')]}
@@ -77,21 +77,21 @@ export default () => {
             //     <button onClick={() => setPanelOpen(false)}>取消</button>
             //   </>
             // )}
-          />
-          {/* <RangePicker<Moment>
+          /> */}
+          <RangePicker<Moment>
             {...sharedProps}
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
             showTime
-            style={{ width: 700 }}
+            // style={{ width: 700 }}
             // ranges={{
             //   ranges: [moment(), moment().add(10, 'day')],
             // }}
             onOk={(dates) => {
               console.log('OK!!!', dates);
             }}
-          /> */}
+          />
           {/* <RangePicker<Moment>
             {...sharedProps}
             value={undefined}

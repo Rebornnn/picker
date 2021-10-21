@@ -65,14 +65,14 @@ export default () => {
               defaultValue: moment('11:28:39', 'HH:mm:ss'),
             }}
             showToday
-            disabledTime={date => {
-              if (date && date.isSame(defaultValue, 'date')) {
-                return {
-                  disabledHours: () => [1, 3, 5, 7, 9, 11],
-                };
-              }
-              return {};
-            }}
+            // disabledTime={date => {
+            //   if (date && date.isSame(defaultValue, 'date')) {
+            //     return {
+            //       disabledHours: () => [1, 3, 5, 7, 9, 11],
+            //     };
+            //   }
+            //   return {};
+            // }}
           />
         </div>
         <div style={{ margin: '0 8px' }}>
