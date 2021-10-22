@@ -68,7 +68,7 @@ export default () => {
             // clearIcon={<span>X</span>}
             // suffixIcon={<span>O</span>}
             onCancel={(v) => console.log(v)}
-            // disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
+            disabledDate={(current) => current && current > moment('1989-03-09').endOf('day')}
             // confirmButton={false}
             // onOpenChange={handlePanelOpen}
             // renderExtraFooter={() => (

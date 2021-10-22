@@ -147,6 +147,7 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
           generateConfig={props.generateConfig}
           locale={props.locale}
           {...disabledTimes}
+          {...timeProps}
           getPopupContainer={(triggerNode) => triggerNode.parentElement}
           picker="time"
           onChange={(a) => {

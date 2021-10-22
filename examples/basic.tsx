@@ -4,7 +4,7 @@ import moment from 'moment';
 import Picker from '../src/Picker';
 import momentGenerateConfig from '../src/generate/moment';
 import zhCN from '../src/locale/zh_CN';
-import enUS from '../src/locale/en_US';
+// import enUS from '../src/locale/en_US';
 import '../assets/index.less';
 
 // const defaultValue = moment('2019-09-03 05:02:03');
@@ -12,7 +12,7 @@ const defaultValue = moment('2019-11-28 01:02:03');
 
 export default () => {
   const [value, setValue] = React.useState<Moment | null>(defaultValue);
-  const weekRef = React.useRef<Picker<Moment>>(null);
+  // const weekRef = React.useRef<Picker<Moment>>(null);
 
   const onSelect = (newValue: Moment) => {
     console.log('Select:', newValue);
@@ -25,21 +25,21 @@ export default () => {
 
   const sharedProps = {
     generateConfig: momentGenerateConfig,
-    value,
+    // value,
     onSelect,
     onChange,
   };
 
-  const keyDown = (e, preventDefault) => {
-    if (e.keyCode === 13) preventDefault();
-  };
+  // const keyDown = (e, preventDefault) => {
+  //   if (e.keyCode === 13) preventDefault();
+  // };
 
   return (
     <div>
       <h1>Value: {value ? value.format('YYYY-MM-DD HH:mm:ss') : 'null'}</h1>
 
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Basic</h3>
           <Picker<Moment> {...sharedProps} locale={zhCN} />
           <Picker<Moment> {...sharedProps} locale={enUS} />
@@ -53,7 +53,7 @@ export default () => {
             showToday
             renderExtraFooter={() => 'extra'}
           />
-        </div>
+        </div> */}
         <div style={{ margin: '0 8px' }}>
           <h3>Datetime</h3>
           <Picker<Moment>
@@ -62,7 +62,7 @@ export default () => {
             defaultPickerValue={defaultValue.clone().subtract(1, 'month')}
             showTime={{
               showSecond: false,
-              defaultValue: moment('11:28:39', 'HH:mm:ss'),
+              // defaultValue: moment('11:28', 'HH:mm'),
             }}
             showToday
             // disabledTime={date => {
@@ -75,7 +75,7 @@ export default () => {
             // }}
           />
         </div>
-        <div style={{ margin: '0 8px' }}>
+        {/* <div style={{ margin: '0 8px' }}>
           <h3>Uncontrolled Datetime</h3>
           <Picker<Moment>
             format="YYYY-MM-DD HH:mm:ss"
@@ -133,7 +133,7 @@ export default () => {
         <div style={{ margin: '0 8px' }}>
           <h3>Keyboard event with prevent default behaviors</h3>
           <Picker<Moment> {...sharedProps} locale={enUS} onKeyDown={keyDown} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
