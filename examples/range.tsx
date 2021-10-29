@@ -83,7 +83,14 @@ export default () => {
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
-            showTime
+            showTime={
+              {
+                // showNow:false,
+                // showSecond: false,
+                // defaultValue: [moment('11:28', 'HH:mm'), moment('12:28', 'HH:mm')],
+              }
+            }
+            // defaultValue={[moment('1989-02-08'), moment('1989-03-20')]}
             // style={{ width: 700 }}
             // ranges={{
             //   ranges: [moment(), moment().add(10, 'day')],

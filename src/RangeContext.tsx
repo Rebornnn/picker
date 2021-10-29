@@ -11,6 +11,7 @@ export type RangeContextProps = {
   inRange?: boolean;
   panelPosition?: 'left' | 'right' | false;
   isFar?: boolean;
+  onTimeSelect?: (value: any) => void;
 };
 
 const RangeContext = React.createContext<RangeContextProps>({});

@@ -59,11 +59,14 @@ export default () => {
           <Picker<Moment>
             {...sharedProps}
             locale={zhCN}
-            defaultPickerValue={defaultValue.clone().subtract(1, 'month')}
-            showTime={{
-              showSecond: false,
-              // defaultValue: moment('11:28', 'HH:mm'),
-            }}
+            // defaultValue={defaultValue}
+            // defaultPickerValue={defaultValue.clone().subtract(1, 'month')}
+            showTime={
+              {
+                // showSecond: false,
+                // defaultValue: moment('11:28', 'HH:mm'),
+              }
+            }
             showToday
             // disabledTime={date => {
             //   if (date && date.isSame(defaultValue, 'date')) {

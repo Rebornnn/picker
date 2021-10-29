@@ -4,6 +4,7 @@ import KeyCode from 'rc-util/lib/KeyCode';
 import type { DatePanelProps } from '../DatePanel';
 import DatePanel from '../DatePanel';
 import type { SharedTimeProps } from '../TimePanel';
+import RangeContext from '../../RangeContext';
 // import TimePanel from '../TimePanel';
 import Picker from '../../Picker';
 import { tuple } from '../../utils/miscUtil';
@@ -25,7 +26,7 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
     operationRef,
     generateConfig,
     value,
-    defaultValue,
+    // defaultValue,
     disabledTime,
     showTime,
     onSelect,
@@ -37,6 +38,8 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
   const timeOperationRef = React.useRef<PanelRefProps>({});
 
   const timeProps = typeof showTime === 'object' ? { ...showTime } : {};
+
+  const { inRange, onTimeSelect } = React.useContext(RangeContext);
 
   // ======================= Keyboard =======================
   function getNextActive(offset: number) {
@@ -93,27 +96,42 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
   const onInternalSelect = (date: DateType, source: 'date' | 'time') => {
     let selectedDate = date;
 
-    if (source === 'date' && !value && timeProps.defaultValue) {
-      // Date with time defaultValue
-      selectedDate = generateConfig.setHour(
-        selectedDate,
-        generateConfig.getHour(timeProps.defaultValue),
-      );
-      selectedDate = generateConfig.setMinute(
-        selectedDate,
-        generateConfig.getMinute(timeProps.defaultValue),
-      );
-      selectedDate = generateConfig.setSecond(
-        selectedDate,
-        generateConfig.getSecond(timeProps.defaultValue),
-      );
-    } else if (source === 'time' && !value && defaultValue) {
-      selectedDate = generateConfig.setYear(selectedDate, generateConfig.getYear(defaultValue));
-      selectedDate = generateConfig.setMonth(selectedDate, generateConfig.getMonth(defaultValue));
-      selectedDate = generateConfig.setDate(selectedDate, generateConfig.getDate(defaultValue));
-    }
+    // if (source === 'date' && !value && timeProps.defaultValue) {
+    //   // Date with time defaultValue
+    //   selectedDate = generateConfig.setHour(
+    //     selectedDate,
+    //     generateConfig.getHour(timeProps.defaultValue),
+    //   );
+    //   selectedDate = generateConfig.setMinute(
+    //     selectedDate,
+    //     generateConfig.getMinute(timeProps.defaultValue),
+    //   );
+    //   selectedDate = generateConfig.setSecond(
+    //     selectedDate,
+    //     generateConfig.getSecond(timeProps.defaultValue),
+    //   );
+    // } else if (source === 'time' && !value && defaultValue) {
+    //   selectedDate = generateConfig.setYear(selectedDate, generateConfig.getYear(defaultValue));
+    //   selectedDate = generateConfig.setMonth(selectedDate, generateConfig.getMonth(defaultValue));
+    //   selectedDate = generateConfig.setDate(selectedDate, generateConfig.getDate(defaultValue));
+    // }
 
-    if (onSelect) {
+    // 范围选择
+    if (inRange) {
+      if (onTimeSelect && source === 'time') {
+        onTimeSelect(selectedDate);
+      }
+      if (onSelect && source === 'date') {
+        onSelect(selectedDate, 'mouse');
+      }
+    } else {
+      // 非范围选择
+      if (value && source === 'time') {
+        selectedDate = generateConfig.setYear(selectedDate, generateConfig.getYear(value));
+        selectedDate = generateConfig.setMonth(selectedDate, generateConfig.getMonth(value));
+        selectedDate = generateConfig.setDate(selectedDate, generateConfig.getDate(value));
+      }
+
       onSelect(selectedDate, 'mouse');
     }
   };
@@ -144,6 +162,7 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
       />
       <div className={classNames(`${panelPrefixCls}-wrap-time`)}>
         <Picker
+          disabled={!value}
           generateConfig={props.generateConfig}
           locale={props.locale}
           {...disabledTimes}

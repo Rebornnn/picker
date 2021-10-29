@@ -801,6 +801,18 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     };
   });
 
+  function changeDateTime(timeValue, panelPosition) {
+    const index = panelPosition === 'left' ? 0 : 1;
+    let newValue = getValue(mergedValue, index);
+    if (timeValue && newValue) {
+      newValue = generateConfig.setHour(newValue, generateConfig.getHour(timeValue));
+      newValue = generateConfig.setMinute(newValue, generateConfig.getMinute(timeValue));
+      newValue = generateConfig.setSecond(newValue, generateConfig.getSecond(timeValue));
+
+      setInnerValue(updateValues(mergedValue, newValue, index));
+    }
+  }
+
   // ============================= Panel =============================
   function renderPanel(
     panelPosition: 'left' | 'right' | false = false,
@@ -823,7 +835,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       const timeDefaultValues: DateType[] = showTime.defaultValue!;
       panelShowTime = {
         ...showTime,
-        defaultValue: getValue(timeDefaultValues, mergedActivePickerIndex) || undefined,
+        // defaultValue: getValue(timeDefaultValues, mergedActivePickerIndex) || undefined,
+        defaultValue: getValue(timeDefaultValues, panelPosition === 'left' ? 0 : 1) || undefined,
       };
     }
 
@@ -849,6 +862,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               picker,
               generateConfig,
             ) === 'far',
+          onTimeSelect: (time) => changeDateTime(time, panelPosition),
         }}
       >
         <PickerPanel<DateType>
@@ -894,7 +908,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
             // setViewDate(viewDate, mergedActivePickerIndex);
           }}
           onOk={null}
-          onSelect={(a) => console.log(777, a)}
+          onSelect={undefined}
           onChange={undefined}
           defaultValue={
             mergedActivePickerIndex === 0 ? getValue(selectedValue, 1) : getValue(selectedValue, 0)
