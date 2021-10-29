@@ -9,12 +9,13 @@ import RangeContext from '../../RangeContext';
 import Picker from '../../Picker';
 import { tuple } from '../../utils/miscUtil';
 import { setDateTime as setTime } from '../../utils/timeUtil';
-import type { PanelRefProps, DisabledTime } from '../../interface';
+import type { PanelRefProps, DisabledTime, Components } from '../../interface';
 
 export type DatetimePanelProps<DateType> = {
   disabledTime?: DisabledTime<DateType>;
   showTime?: boolean | SharedTimeProps<DateType>;
   defaultValue?: DateType;
+  components?: Components;
 } & Omit<DatePanelProps<DateType>, 'disabledHours' | 'disabledMinutes' | 'disabledSeconds'>;
 
 const ACTIVE_PANEL = tuple('date', 'time');
@@ -162,6 +163,7 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
       />
       <div className={classNames(`${panelPrefixCls}-wrap-time`)}>
         <Picker
+          prefixCls={prefixCls}
           disabled={!value}
           generateConfig={props.generateConfig}
           locale={props.locale}
@@ -172,6 +174,7 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
           onChange={(a) => {
             onInternalSelect(a, 'time');
           }}
+          components={props.components}
         />
       </div>
       {/* <TimePanel
