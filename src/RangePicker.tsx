@@ -115,6 +115,7 @@ export type RangePickerSharedProps<DateType> = {
   dateRender?: RangeDateRender<DateType>;
   panelRender?: (originPanel: React.ReactNode) => React.ReactNode;
   confirmButton?: boolean;
+  onTimeChange?: (dates: DateType, index: number) => void;
 };
 
 type OmitPickerProps<Props> = Omit<
@@ -224,6 +225,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     activePickerIndex,
     autoComplete = 'off',
     confirmButton = true,
+    onTimeChange,
   } = props as MergedRangePickerProps<DateType>;
 
   // const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
@@ -389,6 +391,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       }
     } else if (confirmButton || !firstSelectedRef.current) {
       triggerInnerOpen(newOpen);
+      firstSelectedRef.current = true;
 
       if (confirmButton) {
         setInnerValue(preSelectedValues.current);
@@ -804,6 +807,9 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   function changeDateTime(timeValue, panelPosition) {
     const index = panelPosition === 'left' ? 0 : 1;
     let newValue = getValue(mergedValue, index);
+    if (timeValue && onTimeChange) {
+      onTimeChange(timeValue, index);
+    }
     if (timeValue && newValue) {
       newValue = generateConfig.setHour(newValue, generateConfig.getHour(timeValue));
       newValue = generateConfig.setMinute(newValue, generateConfig.getMinute(timeValue));

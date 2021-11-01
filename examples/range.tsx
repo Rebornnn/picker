@@ -23,7 +23,7 @@ export default () => {
   ]);
 
   const onOk = (newValue: [Moment | null, Moment | null] | null, formatStrings?: string[]) => {
-    console.log('Change:', newValue, formatStrings);
+    console.log('onOk:', newValue, formatStrings);
     setValue(newValue);
   };
 
@@ -83,21 +83,24 @@ export default () => {
             locale={zhCN}
             allowClear
             ref={rangePickerRef}
-            showTime={
-              {
-                // showNow:false,
-                // showSecond: false,
-                // defaultValue: [moment('11:28', 'HH:mm'), moment('12:28', 'HH:mm')],
-              }
-            }
+            showTime
+            // showTime={
+            //   {
+            //     // showNow:false,
+            //     // showSecond: false,
+            //     // defaultValue: [moment('11:28', 'HH:mm'), moment('12:28', 'HH:mm')],
+            //   }
+            // }
             // defaultValue={[moment('1989-02-08'), moment('1989-03-20')]}
             // style={{ width: 700 }}
             // ranges={{
             //   ranges: [moment(), moment().add(10, 'day')],
             // }}
-            onOk={(dates) => {
-              console.log('OK!!!', dates);
-            }}
+            // onCalendarChange={(newValue: [Moment | null, Moment | null] | null, formatStrings?: string[]) => {
+            //   console.log('onCalendarChange:', newValue, formatStrings);
+            //   // setValue(newValue);
+            // }}
+            onTimeChange={(date, index) => console.log(11, date, index)}
           />
           {/* <RangePicker<Moment>
             {...sharedProps}
