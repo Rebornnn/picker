@@ -29,6 +29,7 @@ const locale: Locale = {
   nextDecade: 'Next decade',
   previousCentury: 'Last century',
   nextCentury: 'Next century',
+  time: 'time',
 };
 
 export default locale;

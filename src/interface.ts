@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import type { GenerateConfig } from './generate';
 
 export type Locale = {
@@ -40,6 +40,7 @@ export type Locale = {
 
   shortWeekDays?: string[];
   shortMonths?: string[];
+  time?: string;
 };
 
 export type PanelMode = 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year' | 'decade';

@@ -162,6 +162,7 @@ function DatetimePanel<DateType>(props: DatetimePanelProps<DateType>) {
         }}
       />
       <div className={classNames(`${panelPrefixCls}-wrap-time`)}>
+        <span>{props.locale.time}:</span>
         <Picker
           prefixCls={prefixCls}
           disabled={!value}
